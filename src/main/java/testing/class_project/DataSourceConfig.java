@@ -1,0 +1,78 @@
+package testing.class_project;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Centralized configuration for multiple IP-based DataSources.
+ * <p>
+ * Main responsibilities:
+ * 1. Creates a routing DataSource that selects connections based on client IP
+ * 2. Manages connection pools for each database user
+ * 3. Provides secure credentials through IP-based routing
+ */
+
+@Configuration
+public class DataSourceConfig {
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private IpConfig ipConfig;
+
+    /**
+     * Creates routing DataSource that selects connection based on client IP.
+     * Uses separate connection pool for each database user.
+     */
+
+    @Bean
+    public DataSource dataSource() {
+        var targetDataSources = buildAllDataSources();
+
+        AbstractRoutingDataSource dataSource = new AbstractRoutingDataSource() {
+            @Override
+            protected Object determineCurrentLookupKey() {
+                return getCurrentIpDataSource();
+            }
+        };
+
+        dataSource.setTargetDataSources(targetDataSources);
+        return dataSource;
+    }
+
+    private Map<Object, Object> buildAllDataSources() {
+        var dataSources = new HashMap<>();
+
+        IpConfig.IP_CREDENTIAL_MAP.forEach((ip, creds) ->
+                dataSources.put(creds[0], createDataSource(creds[0], creds[1]))
+        );
+
+        dataSources.put(
+                IpConfig.DEFAULT_CREDENTIALS[0],
+                createDataSource(IpConfig.DEFAULT_CREDENTIALS[0], IpConfig.DEFAULT_CREDENTIALS[1])
+        );
+
+        return dataSources;
+    }
+
+    private String getCurrentIpDataSource() {
+        var ip = request.getRemoteAddr();
+        return ipConfig.getCredentialsForIp(ip)[0];
+    }
+
+    private DataSource createDataSource(String username, String password) {
+        var dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
+        dataSource.setUrl("jdbc:mysql://200.13.4.221:3306/employees");
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
+    }
+}
