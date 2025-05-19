@@ -36,11 +36,49 @@ public class QueryRepository {
             WHERE hire_date >= ?;
             """;
 
+    public static final String QUERY_4_1 = """
+                SELECT
+                    e.emp_no,
+                    CONCAT(e.first_name, ' ', e.last_name) AS manager_name,
+                    d.dept_name AS department
+                FROM dept_manager dm
+                JOIN employees e ON dm.emp_no = e.emp_no
+                JOIN departments d ON dm.dept_no = d.dept_no;
+                """;
+
+    public static final String QUERY_4_2 = """
+                SELECT DISTINCT e.emp_no, e.first_name, e.last_name, e.gender, e.hire_date
+                FROM employees e
+                JOIN dept_emp de ON e.emp_no = de.emp_no
+                JOIN dept_manager dm ON de.dept_no = dm.dept_no
+                JOIN departments d ON de.dept_no = d.dept_no
+                WHERE e.gender = 'F'
+                  AND dm.emp_no = ?
+                  AND de.from_date <= dm.to_date
+                  AND de.to_date >= dm.from_date
+                LIMIT ? OFFSET ?
+                """;
+
+    public static final String QUERY_4_3 = """
+                SELECT DISTINCT COUNT(*) AS total_count
+                FROM employees e
+                JOIN dept_emp de ON e.emp_no = de.emp_no
+                JOIN dept_manager dm ON de.dept_no = dm.dept_no
+                JOIN departments d ON de.dept_no = d.dept_no
+                WHERE e.gender = 'F'
+                  AND dm.emp_no = ?
+                  AND de.from_date <= dm.to_date
+                  AND de.to_date >= dm.from_date
+                """;
+
     public String getQuery(String queryId) {
         return switch(queryId) {
             case "query1" -> QUERY_1;
             case "query2" -> QUERY_2;
             case "query3" -> QUERY_3;
+            case "query41" -> QUERY_4_1;
+            case "query42" -> QUERY_4_2;
+            case "query43" -> QUERY_4_3;
             default -> throw new IllegalArgumentException("Query not found: " + queryId);
         };
     }
