@@ -1,19 +1,19 @@
 package testing.class_project;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * REST Controller for employee database operations.
@@ -118,5 +118,42 @@ public class TestingController {
 
         var employeesCount = jdbcTemplate.queryForList(queryRepository.getQuery("query43"), managerId);
         return ResponseEntity.ok(employeesCount);
+    }
+
+    // Query 5.1: Lista de empleados masculinos bajo un manager, paginada
+    @GetMapping("/employees/manager/{managerId}/males")
+    public ResponseEntity<List<Map<String, Object>>> getMaleEmployeesByManager(
+            @PathVariable int managerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        if (!accessControlService.canExecuteQuery51()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        var employees = jdbcTemplate.queryForList(queryRepository.getQuery("query5"), managerId, size, page * size);
+        return ResponseEntity.ok(employees);
+    }
+
+    // Query 5.2: Cantidad de empleados masculinos bajo un manager
+    @GetMapping("/employees/manager/{managerId}/males/count")
+    public ResponseEntity<List<Map<String, Object>>> getMaleEmployeesByManagerCount(@PathVariable int managerId) {
+        if (!accessControlService.canExecuteQuery52()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        var count = jdbcTemplate.queryForList(queryRepository.getQuery("query52"), managerId);
+        return ResponseEntity.ok(count);
+    }
+
+    // Query 5.3: Total de empleados en la base de datos
+    @GetMapping("/employees/count")
+    public ResponseEntity<List<Map<String, Object>>> getTotalEmployees() {
+        if (!accessControlService.canExecuteQuery53()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        var total = jdbcTemplate.queryForList(queryRepository.getQuery("query53"));
+        return ResponseEntity.ok(total);
     }
 }

@@ -71,6 +71,34 @@ public class QueryRepository {
                   AND de.to_date >= dm.from_date
                 """;
 
+    public static final String QUERY_5_1 = """
+    SELECT DISTINCT e.emp_no, e.first_name, e.last_name, e.gender, e.hire_date
+    FROM employees e
+    JOIN dept_emp de ON e.emp_no = de.emp_no
+    JOIN dept_manager dm ON de.dept_no = dm.dept_no
+    WHERE e.gender = 'M'
+      AND dm.emp_no = ?
+      AND de.from_date <= dm.to_date
+      AND de.to_date >= dm.from_date
+    LIMIT ? OFFSET ?
+    """;
+
+    public static final String QUERY_5_2 = """
+    SELECT COUNT(DISTINCT e.emp_no) AS total_count
+    FROM employees e
+    JOIN dept_emp de ON e.emp_no = de.emp_no
+    JOIN dept_manager dm ON de.dept_no = dm.dept_no
+    WHERE e.gender = 'M'
+      AND dm.emp_no = ?
+      AND de.from_date <= dm.to_date
+      AND de.to_date >= dm.from_date
+    """;
+
+    public static final String QUERY_5_3 = """
+    SELECT COUNT(*) AS total_employees
+    FROM employees
+    """;
+
     public String getQuery(String queryId) {
         return switch(queryId) {
             case "query1" -> QUERY_1;
@@ -79,6 +107,9 @@ public class QueryRepository {
             case "query41" -> QUERY_4_1;
             case "query42" -> QUERY_4_2;
             case "query43" -> QUERY_4_3;
+            case "query5" -> QUERY_5_1;
+            case "query52" -> QUERY_5_2;
+            case "query53" -> QUERY_5_3;
             default -> throw new IllegalArgumentException("Query not found: " + queryId);
         };
     }

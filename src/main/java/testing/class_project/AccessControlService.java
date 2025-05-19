@@ -1,8 +1,9 @@
 package testing.class_project;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Controls query execution permissions based on client IP
@@ -46,6 +47,19 @@ public class AccessControlService {
     public boolean canExecuteQuery43() {
         return canExecuteQuery(IpConfig.FRANCISCO, IpConfig.QUERY_4_3);
     }
+
+    public boolean canExecuteQuery51() {
+        return canExecuteQuery(IpConfig.JUAN, IpConfig.QUERY_5_1);
+    }
+    
+    public boolean canExecuteQuery52() {
+        return canExecuteQuery(IpConfig.JUAN, IpConfig.QUERY_5_2);
+    }
+
+    public boolean canExecuteQuery53() {
+        return canExecuteQuery(IpConfig.JUAN, IpConfig.QUERY_5_3);
+    }
+
 
     public boolean canExecuteQuery(String allowedUser, String requiredQuery) {
         var userData = ipConfig.getCredentialsForIp(request.getRemoteAddr());

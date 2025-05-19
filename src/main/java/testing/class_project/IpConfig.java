@@ -1,9 +1,9 @@
 package testing.class_project;
 
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Component;
 
 /**
  * Manages the mapping between client IP addresses and database credentials.
@@ -20,6 +20,7 @@ public class IpConfig {
     public static final String SEBASTIAN_IP = "200.13.4.196";
     public static final String DIEGO_IP = "200.13.4.238";
     public static final String FRANCISCO_IP = "200.13.4.240";
+    public static final String JUAN_IP = "200.13.4.251";
 
     public static final String FELIPE = "felipe";
     public static final String SEBASTIAN = "sebastian";
@@ -33,12 +34,16 @@ public class IpConfig {
     public static final String QUERY_4_1 = "query41";
     public static final String QUERY_4_2 = "query42";
     public static final String QUERY_4_3 = "query43";
+    public static final String QUERY_5_1 = "query51";
+    public static final String QUERY_5_2 = "query52";
+    public static final String QUERY_5_3 = "query53";
 
     public static final Map<String, IpData> IP_CREDENTIAL_MAP = Map.of(
             FELIPE_IP, new IpData(FELIPE, List.of(QUERY_1), "mypass234"),
-            SEBASTIAN_IP, new IpData(SEBASTIAN, List.of(QUERY_2), "mypass432"),
+            SEBASTIAN_IP, new IpData(SEBASTIAN, List.of(QUERY_2), "mypass234"),
             DIEGO_IP, new IpData(DIEGO, List.of(QUERY_3), "mypass321"),
-            FRANCISCO_IP, new IpData(FRANCISCO, List.of(QUERY_4_1, QUERY_4_2, QUERY_4_3), "mypass123")
+            FRANCISCO_IP, new IpData(FRANCISCO, List.of(QUERY_4_1, QUERY_4_2, QUERY_4_3), "mypass123"),
+            JUAN_IP, new IpData(JUAN, List.of(QUERY_5_1,QUERY_5_2,QUERY_5_3), "mypass543")
     );
 
     public static final IpData DEFAULT_CREDENTIALS =
