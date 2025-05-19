@@ -46,6 +46,21 @@ public class TestingController {
         var results = jdbcTemplate.queryForList(queryRepository.getQuery("query1"), departmentName);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
+    
+    @GetMapping("/query2")
+    public ResponseEntity<List<Map<String, Object>>> getEmployeeCountByGenderAndDepartment(@RequestParam String departmentName) {
+        if (!accessControlService.canExecuteQuery2()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            var results = jdbcTemplate.queryForList(queryRepository.getQuery("query2"), departmentName);
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @GetMapping("/query3")
     public ResponseEntity<Integer> getNumberOfEmployeesThatWorksSince(@RequestParam String fromDate) {

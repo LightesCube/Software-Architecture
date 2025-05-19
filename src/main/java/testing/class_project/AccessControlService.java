@@ -49,7 +49,7 @@ public class AccessControlService {
 
     public boolean canExecuteQuery(String allowedUser, String requiredQuery) {
         var userData = ipConfig.getCredentialsForIp(request.getRemoteAddr());
-        var userName = userData.Name();
+        var userName = userData.name();
         var userQueries = userData.queries();
         return userName.equals(allowedUser) && userQueries.contains(requiredQuery);
     }
