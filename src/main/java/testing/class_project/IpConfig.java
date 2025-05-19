@@ -36,7 +36,7 @@ public class IpConfig {
 
     public static final Map<String, IpData> IP_CREDENTIAL_MAP = Map.of(
             FELIPE_IP, new IpData(FELIPE, List.of(QUERY_1), "mypass234"),
-            SEBASTIAN_IP, new IpData(SEBASTIAN, List.of(QUERY_2), "mypass234"),
+            SEBASTIAN_IP, new IpData(SEBASTIAN, List.of(QUERY_2), "mypass432"),
             DIEGO_IP, new IpData(DIEGO, List.of(QUERY_3), "mypass321"),
             FRANCISCO_IP, new IpData(FRANCISCO, List.of(QUERY_4_1, QUERY_4_2, QUERY_4_3), "mypass123")
     );
