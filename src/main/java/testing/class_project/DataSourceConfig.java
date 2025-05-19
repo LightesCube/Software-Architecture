@@ -50,21 +50,20 @@ public class DataSourceConfig {
     private Map<Object, Object> buildAllDataSources() {
         var dataSources = new HashMap<>();
 
-        IpConfig.IP_CREDENTIAL_MAP.forEach((ip, creds) ->
-                dataSources.put(creds[0], createDataSource(creds[0], creds[1]))
-        );
-
-        dataSources.put(
-                IpConfig.DEFAULT_CREDENTIALS[0],
-                createDataSource(IpConfig.DEFAULT_CREDENTIALS[0], IpConfig.DEFAULT_CREDENTIALS[1])
-        );
+        IpConfig.IP_CREDENTIAL_MAP.forEach((ip, ipData) -> {
+            var username = ipData.name();
+            var password = ipData.password();
+            if (!dataSources.containsKey(username)) {
+                dataSources.put(username, createDataSource(username, password));
+            }
+        });
 
         return dataSources;
     }
 
     private String getCurrentIpDataSource() {
         var ip = request.getRemoteAddr();
-        return ipConfig.getCredentialsForIp(ip)[0];
+        return ipConfig.getCredentialsForIp(ip).name();
     }
 
     private DataSource createDataSource(String username, String password) {

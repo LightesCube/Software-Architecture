@@ -24,7 +24,33 @@ public class AccessControlService {
      * @return true if client IP is mapped to credentials authorized for query1
      */
     public boolean canExecuteQuery1() {
-        String currentUser = ipConfig.getCredentialsForIp(request.getRemoteAddr())[0];
-        return currentUser.equals(IpConfig.QUERY1_ALLOWED_USER);
+        return canExecuteQuery(IpConfig.FELIPE, IpConfig.QUERY_1);
+    }
+
+    public boolean canExecuteQuery2() {
+        return canExecuteQuery(IpConfig.SEBASTIAN, IpConfig.QUERY_2);
+    }
+
+    public boolean canExecuteQuery3() {
+        return canExecuteQuery(IpConfig.DIEGO, IpConfig.QUERY_3);
+    }
+
+    public boolean canExecuteQuery41() {
+        return canExecuteQuery(IpConfig.FRANCISCO, IpConfig.QUERY_4_1);
+    }
+
+    public boolean canExecuteQuery42() {
+        return canExecuteQuery(IpConfig.FRANCISCO, IpConfig.QUERY_4_2);
+    }
+
+    public boolean canExecuteQuery43() {
+        return canExecuteQuery(IpConfig.FRANCISCO, IpConfig.QUERY_4_3);
+    }
+
+    public boolean canExecuteQuery(String allowedUser, String requiredQuery) {
+        var userData = ipConfig.getCredentialsForIp(request.getRemoteAddr());
+        var userName = userData.Name();
+        var userQueries = userData.queries();
+        return userName.equals(allowedUser) && userQueries.contains(requiredQuery);
     }
 }
