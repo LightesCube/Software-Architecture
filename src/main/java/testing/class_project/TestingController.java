@@ -153,4 +153,14 @@ public class TestingController {
         var total = jdbcTemplate.queryForList(queryRepository.getQuery("query53"));
         return ResponseEntity.ok(total);
     }
+    @GetMapping("/managerss")
+    public ResponseEntity<List<Map<String, Object>>> getAllManagerss() {
+        if (!accessControlService.canExecuteQuery54()) {
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+     }
+
+    var managers = jdbcTemplate.queryForList(queryRepository.getQuery("query54"));
+    return ResponseEntity.ok(managers);
+  }
 }
+

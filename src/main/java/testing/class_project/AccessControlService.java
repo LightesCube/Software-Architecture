@@ -59,12 +59,15 @@ public class AccessControlService {
     public boolean canExecuteQuery53() {
         return canExecuteQuery(IpConfig.JUAN, IpConfig.QUERY_5_3);
     }
-
-
+	
+    public boolean canExecuteQuery54() {
+        return canExecuteQuery(IpConfig.JUAN, IpConfig.QUERY_5_4);
+    }
     public boolean canExecuteQuery(String allowedUser, String requiredQuery) {
         var userData = ipConfig.getCredentialsForIp(request.getRemoteAddr());
         var userName = userData.name();
         var userQueries = userData.queries();
+	System.out.println("Remote IP: " + request.getRemoteAddr());
         return userName.equals(allowedUser) && userQueries.contains(requiredQuery);
     }
 }

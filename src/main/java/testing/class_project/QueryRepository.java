@@ -99,6 +99,16 @@ public class QueryRepository {
     FROM employees
     """;
 
+    public static final String QUERY_5_4 = """
+                SELECT
+                    e.emp_no,
+                    CONCAT(e.first_name, ' ', e.last_name) AS manager_name,
+                    d.dept_name AS department
+                FROM dept_manager dm
+                JOIN employees e ON dm.emp_no = e.emp_no
+                JOIN departments d ON dm.dept_no = d.dept_no;
+                """;
+
     public String getQuery(String queryId) {
         return switch(queryId) {
             case "query1" -> QUERY_1;
@@ -110,6 +120,7 @@ public class QueryRepository {
             case "query5" -> QUERY_5_1;
             case "query52" -> QUERY_5_2;
             case "query53" -> QUERY_5_3;
+            case "query54" -> QUERY_5_4;
             default -> throw new IllegalArgumentException("Query not found: " + queryId);
         };
     }
